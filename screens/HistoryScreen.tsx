@@ -8,6 +8,7 @@ export default function HistoryScreen({ onBack }: { onBack?: () => void }) {
   const [historyType, setHistoryType] = useState<"caretaker" | "guardian">("caretaker");
   const caretakerId = "caretakerA";
   const guardianId = "guardianA";
+  const currentUserId = historyType === "caretaker" ? caretakerId : guardianId;
 
   useEffect(() => {
     const unsub = listenRequests(setRequests);
@@ -17,12 +18,10 @@ export default function HistoryScreen({ onBack }: { onBack?: () => void }) {
   const completedRequests = useMemo(
     () =>
       requests
-        .filter((r) => r.status === "completed")
+        .filter((r) => r.status === "completed" && r.acceptedBy === currentUserId)
         .sort((a, b) => (b.completedAt?.seconds || 0) - (a.completedAt?.seconds || 0)),
-    [requests]
+    [requests, currentUserId]
   );
-
-  const currentUserId = historyType === "caretaker" ? caretakerId : guardianId;
 
   return (
     <SafeAreaView style={styles.safe}>

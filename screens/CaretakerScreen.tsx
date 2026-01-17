@@ -44,24 +44,30 @@ export default function CaretakerScreen({ onViewHistory }: { onViewHistory?: () 
     await setCaretakerShift(caretakerId, !onShift);
   };
 
-  // Active: pending requests or requests accepted by me
+  // Active: pending requests or requests accepted by me (only if on shift)
   const activeRequests = useMemo(
-    () => sortRequests(
-      requests.filter(
-        (r) => r.status !== "completed" && (r.status === "pending" || r.acceptedBy === caretakerId)
-      ) as any
-    ),
-    [requests]
+    () => {
+      if (!onShift) return [];
+      return sortRequests(
+        requests.filter(
+          (r) => r.status !== "completed" && (r.status === "pending" || r.acceptedBy === caretakerId)
+        ) as any
+      );
+    },
+    [requests, onShift]
   );
 
-  // Pending: requests accepted by someone else (not me)
+  // Pending: requests accepted by someone else (not me) (only if on shift)
   const pendingRequests = useMemo(
-    () => sortRequests(
-      requests.filter(
-        (r) => r.status !== "completed" && r.acceptedBy && r.acceptedBy !== caretakerId
-      ) as any
-    ),
-    [requests]
+    () => {
+      if (!onShift) return [];
+      return sortRequests(
+        requests.filter(
+          (r) => r.status !== "completed" && r.acceptedBy && r.acceptedBy !== caretakerId
+        ) as any
+      );
+    },
+    [requests, onShift]
   );
 
   const displayedRequests = tab === "active" ? activeRequests : pendingRequests;
@@ -137,7 +143,9 @@ export default function CaretakerScreen({ onViewHistory }: { onViewHistory?: () 
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={styles.emptyText}>
-              {tab === "active" ? "No active requests." : "No pending requests."}
+              {!onShift 
+                ? "You're off shift. Turn on shift to see requests."
+                : tab === "active" ? "No active requests." : "No pending requests."}
             </Text>
           </View>
         }
