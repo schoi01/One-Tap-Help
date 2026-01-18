@@ -5,8 +5,8 @@ import {
   acceptRequest,
   completeRequest,
   FireRequest,
-  listenCaretakers,
-  checkAnyCaretakerOnShift,
+  listenCaregivers,
+  checkAnyCaregiverOnShift,
 } from "../store/requestsApi";
 import { sortRequests } from "../utils/requestSort";
 import RequestCard from "../components/RequestCard";
@@ -24,8 +24,8 @@ export default function GuardianScreen({ onViewHistory }: { onViewHistory?: () =
 
   // Listen to caretaker shifts for visibility only
   useEffect(() => {
-    const unsub = listenCaretakers(async (caretakers) => {
-      const onShiftAny = caretakers.some((c) => c.onShift === true);
+    const unsub = listenCaregivers(async (caregivers) => {
+      const onShiftAny = caregivers.some((c) => c.onShift === true);
       setAnyCaretakerOnShift(onShiftAny);
     });
     return unsub;
