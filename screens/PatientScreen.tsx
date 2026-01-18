@@ -5,12 +5,16 @@ import { Urgency } from "../types/request";
 
 function BigButton({
   label,
+  icon,
   onPress,
   variant = "water",
+  fullWidth = false,
 }: {
   label: string;
+  icon: string;
   onPress: () => void;
   variant?: "water" | "food" | "bathroom" | "help" | "emergency";
+  fullWidth?: boolean;
 }) {
   const variantStyles = {
     water: styles.btnWater,
@@ -25,11 +29,15 @@ function BigButton({
       onPress={onPress}
       style={({ pressed }) => [
         styles.bigBtn,
+        fullWidth && styles.fullWidthBtn,
         variantStyles[variant],
         pressed && { opacity: 0.9 },
       ]}
     >
-      <Text style={styles.bigBtnText}>{label}</Text>
+      <View style={styles.buttonContent}>
+        <Text style={styles.iconPlaceholder}>{icon}</Text>
+        <Text style={styles.bigBtnText}>{label}</Text>
+      </View>
     </Pressable>
   );
 }
@@ -45,44 +53,47 @@ export default function PatientScreen() {
 
   return (
     <View style={styles.container}>
-      <View
-        style={[
-          styles.buttonsContainer,
-          isLandscape && styles.buttonsContainerLandscape,
-        ]}
-      >
-        <View
-          style={[
-            styles.buttonGrid,
-            isLandscape && styles.buttonGridLandscape,
-          ]}
-        >
-          <BigButton
-            label="WATER"
-            variant="water"
-            onPress={() => handleCreate("Water", "normal")}
-          />
-          <BigButton
-            label="FOOD"
-            variant="food"
-            onPress={() => handleCreate("Food", "high")}
-          />
-          <BigButton
-            label="BATHROOM"
-            variant="bathroom"
-            onPress={() => handleCreate("Bathroom", "high")}
-          />
-          <BigButton
-            label="HELP"
-            variant="help"
-            onPress={() => handleCreate("Help", "high")}
-          />
-          <BigButton
-            label="EMERGENCY"
-            variant="emergency"
-            onPress={() => handleCreate("Emergency", "emergency")}
-          />
+      <View style={styles.topBox}>
+        <View style={styles.gridContainer}>
+          <View style={styles.gridRow}>
+            <BigButton
+              label="WATER"
+              icon="💧"
+              variant="water"
+              onPress={() => handleCreate("Water", "normal")}
+            />
+            <BigButton
+              label="FOOD"
+              icon="🍽️"
+              variant="food"
+              onPress={() => handleCreate("Food", "high")}
+            />
+          </View>
+          <View style={styles.gridRow}>
+            <BigButton
+              label="BATHROOM"
+              icon="🚽"
+              variant="bathroom"
+              onPress={() => handleCreate("Bathroom", "high")}
+            />
+            <BigButton
+              label="HELP"
+              icon="🔔"
+              variant="help"
+              onPress={() => handleCreate("Help", "high")}
+            />
+          </View>
         </View>
+      </View>
+
+      <View style={styles.bottomBox}>
+        <BigButton
+          label="EMERGENCY"
+          icon="🚨"
+          variant="emergency"
+          fullWidth={true}
+          onPress={() => handleCreate("Emergency", "emergency")}
+        />
       </View>
     </View>
   );
@@ -92,78 +103,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-  },
-
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    backgroundColor: "#f5f7fa",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "700",
-    marginBottom: 4,
-    color: "#111827",
-  },
-  sub: {
-    fontSize: 16,
-    opacity: 0.6,
-    color: "#666",
-  },
-
-  buttonsContainer: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonsContainerLandscape: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    padding: 16,
     gap: 16,
+    padding: 16,
   },
 
-  headerLandscape: {
-    justifyContent: "center",
-    alignItems: "center",
-    minWidth: 120,
-    paddingHorizontal: 12,
-  },
-  titleLandscape: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#111827",
-    marginBottom: 4,
-  },
-  subLandscape: {
-    fontSize: 12,
-    opacity: 0.6,
-    color: "#666",
-    textAlign: "center",
-  },
-
-  buttonGrid: {
+  topBox: {
     flex: 1,
     gap: 12,
-    justifyContent: "space-around",
-    width: "100%",
   },
-  buttonGridLandscape: {
+
+  bottomBox: {
+    minHeight: 120,
+    justifyContent: "flex-end",
+  },
+
+  gridContainer: {
+    flex: 1,
+    gap: 12,
+  },
+
+  gridRow: {
     flex: 1,
     flexDirection: "row",
     gap: 12,
-    justifyContent: "space-around",
-    alignItems: "stretch",
+    justifyContent: "space-between",
   },
 
   bigBtn: {
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
-    minHeight: 100,
     flex: 1,
+  },
+
+  fullWidthBtn: {
+    width: "100%",
+    minHeight: 100,
+  },
+
+  buttonContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+
+  iconPlaceholder: {
+    fontSize: 40,
   },
 
   btnWater: {
@@ -184,7 +169,7 @@ const styles = StyleSheet.create({
 
   bigBtnText: {
     color: "white",
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "800",
     letterSpacing: 0.5,
   },
