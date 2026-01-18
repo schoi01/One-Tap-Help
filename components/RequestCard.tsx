@@ -145,18 +145,20 @@ export default function RequestCard({
 
       {isEmergency && (
         <View style={styles.emergencyHintContainer}>
-          <Text style={styles.emergencyHint}>
-            Emergency is pinned to the top until completed.
-          </Text>
-          <Pressable
-            onPress={() => onResolve(item.id)}
-            style={({ pressed }) => [
-              styles.resolvedBtn,
-              pressed && styles.resolvedBtnPressed,
-            ]}
-          >
-            <Text style={styles.resolvedBtnText}>Resolved</Text>
-          </Pressable>
+          <View style={styles.emergencyTextWrapper}>
+            <Text style={styles.emergencyHint}>
+              Emergency is pinned to the top until completed.
+            </Text>
+            <Pressable
+              onPress={() => onResolve(item.id)}
+              style={({ pressed }) => [
+                styles.resolvedBtn,
+                pressed && styles.resolvedBtnPressed,
+              ]}
+            >
+              <Text style={styles.resolvedBtnText}>Resolved</Text>
+            </Pressable>
+          </View>
         </View>
       )}
     </View>
@@ -203,7 +205,8 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.8 },
 
   emergencyHint: { marginTop: 10, fontSize: 12, fontWeight: "700", color: "#FFFFFF" },
-  emergencyHintContainer: { marginTop: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  emergencyHintContainer: { marginTop: 10 },
+  emergencyTextWrapper: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 8 },
   resolvedBtn: { paddingVertical: 5, paddingHorizontal: 10, backgroundColor: "#FFFFFF", borderRadius: 30 },
   resolvedBtnPressed: { opacity: 0.7 },
   resolvedBtnText: { fontSize: 11, fontWeight: "700", color: "#B91C1C" },
