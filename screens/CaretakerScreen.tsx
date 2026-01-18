@@ -5,28 +5,28 @@ import {
   acceptRequest,
   completeRequest,
   FireRequest,
-  registerCaregiverToken,
-  setCaregiverShift,
-  listenCaregiverShift,
+  registerCaretakerToken,
+  setCaretakerShift,
+  listenCaretakerShift,
 } from "../store/requestsApi";
 import { sortRequests } from "../utils/requestSort";
 import { registerForPushNotifications } from "../utils/notifications";
 import RequestCard from "../components/RequestCard";
 
-export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () => void }) {
+export default function CaretakerScreen({ onViewHistory }: { onViewHistory?: () => void }) {
   const [requests, setRequests] = useState<FireRequest[]>([]);
   const [onShift, setOnShift] = useState(false);
   const [tab, setTab] = useState<"active" | "pending">("active");
-  const caregiverId = "caregiverA";
+  const caretakerId = "caretakerA";
 
   useEffect(() => {
     const unsub = listenRequests(setRequests);
     return unsub;
   }, []);
 
-  // Listen to caregiver shift status from Firestore
+  // Listen to caretaker shift status from Firestore
   useEffect(() => {
-    const unsub = listenCaregiverShift(caregiverId, setOnShift);
+    const unsub = listenCaretakerShift(caretakerId, setOnShift);
     return unsub;
   }, []);
 
@@ -35,13 +35,13 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
     (async () => {
       const token = await registerForPushNotifications();
       if (token) {
-        await registerCaregiverToken(caregiverId, token);
+        await registerCaretakerToken(caretakerId, token);
       }
     })();
   }, []);
 
   const handleShiftToggle = async () => {
-    await setCaregiverShift(caregiverId, !onShift);
+    await setCaretakerShift(caretakerId, !onShift);
   };
 
   // Active: pending requests or requests accepted by me (only if on shift)
@@ -50,9 +50,9 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
       if (!onShift) return [];
       return sortRequests(
         requests.filter(
-          (r) => r.status !== "completed" && (r.status === "pending" || r.acceptedBy === caregiverId)
+          (r) => r.status !== "completed" && (r.status === "pending" || r.acceptedBy === caretakerId)
         ) as any,
-        caregiverId
+        caretakerId
       );
     },
     [requests, onShift]
@@ -64,9 +64,9 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
       if (!onShift) return [];
       return sortRequests(
         requests.filter(
-          (r) => r.status !== "completed" && r.acceptedBy && r.acceptedBy !== caregiverId
+          (r) => r.status !== "completed" && r.acceptedBy && r.acceptedBy !== caretakerId
         ) as any,
-        caregiverId
+        caretakerId
       );
     },
     [requests, onShift]
@@ -79,7 +79,7 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
       <View style={styles.header}>
         <View style={styles.headerTop}>
           <View>
-            <Text style={styles.headerTitle}>Caregiver</Text>
+            <Text style={styles.headerTitle}>Caretaker</Text>
             <Text style={styles.headerSub}>Newest first • Emergency pinned</Text>
           </View>
           <Pressable
@@ -130,15 +130,15 @@ export default function caregiverScreen({ onViewHistory }: { onViewHistory?: () 
           <RequestCard
             item={item as any}
             onAcknowledge={(id: string) =>
-              acceptRequest(id, caregiverId)
+              acceptRequest(id, caretakerId)
             }
             onResolve={(id: string) =>
-              item.acceptedBy === caregiverId
-                ? completeRequest(id, caregiverId)
+              item.acceptedBy === caretakerId
+                ? completeRequest(id, caretakerId)
                 : null
             }
             acceptedBy={item.acceptedBy}
-            currentUserId={caregiverId}
+            currentUserId={caretakerId}
             disabledReason={!onShift ? "Off shift - Guardian can help" : undefined}
           />
         )}
