@@ -188,10 +188,10 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   shiftBtnActive: {
-    backgroundColor: "#34C759",
+    backgroundColor: "#57BF42",
   },
   shiftBtnInactive: {
-    backgroundColor: "#FF3B30",
+    backgroundColor: "#B91C1C",
   },
   shiftBtnText: {
     color: "#fff",
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 12,
-    borderRadius: 8,
+    borderRadius: 16,
     backgroundColor: "#e5e5e5",
     alignItems: "center",
   },
