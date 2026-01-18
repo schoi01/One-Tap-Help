@@ -61,17 +61,17 @@ export async function createRequest(params: {
     completedBy: null,
   });
 
-  // Send notifications to caretakers on shift only
+  // Send notifications to Caregivers on shift only
   try {
-    const caretakersSnap = await getDocs(
-      collection(db, "caretakers")
+    const CaregiversSnap = await getDocs(
+      collection(db, "Caregivers")
     );
-    const onShiftCaretakers = caretakersSnap.docs.filter(
+    const onShiftCaregivers = CaregiversSnap.docs.filter(
       (d) => d.data().onShift === true && d.data().pushToken
     );
     
-    for (const caretakerDoc of onShiftCaretakers) {
-      const pushToken = caretakerDoc.data().pushToken;
+    for (const CaregiverDoc of onShiftCaregivers) {
+      const pushToken = CaregiverDoc.data().pushToken;
       await sendNotification(
         pushToken,
         params.title,
@@ -79,8 +79,8 @@ export async function createRequest(params: {
       );
     }
     
-    if (onShiftCaretakers.length === 0) {
-      console.log("No caretakers on shift - request will be handled by guardian");
+    if (onShiftCaregivers.length === 0) {
+      console.log("No Caregivers on shift - request will be handled by guardian");
     }
   } catch (error) {
     console.log("Could not send notifications:", error);
@@ -114,14 +114,14 @@ export async function completeRequest(requestId: string, userId: string) {
   });
 }
 
-export async function registerCaretakerToken(
-  caretakerId: string,
+export async function registerCaregiverToken(
+  CaregiverId: string,
   pushToken: string
 ) {
   try {
-    const caretakerRef = doc(db, "caretakers", caretakerId);
+    const CaregiverRef = doc(db, "Caregivers", CaregiverId);
     await setDoc(
-      caretakerRef,
+      CaregiverRef,
       {
         pushToken,
         lastUpdated: serverTimestamp(),
@@ -129,32 +129,32 @@ export async function registerCaretakerToken(
       { merge: true }
     );
   } catch (error) {
-    console.error("Failed to register caretaker token:", error);
+    console.error("Failed to register Caregiver token:", error);
   }
 }
 
-export async function setCaretakerShift(
-  caretakerId: string,
+export async function setCaregiverShift(
+  CaregiverId: string,
   onShift: boolean
 ) {
-  const caretakerRef = doc(db, "caretakers", caretakerId);
+  const CaregiverRef = doc(db, "Caregivers", CaregiverId);
   try {
     await setDoc(
-      caretakerRef,
+      CaregiverRef,
       {
         onShift,
         lastUpdated: serverTimestamp(),
       },
       { merge: true }
     );
-    console.log("Caretaker shift updated:", onShift);
+    console.log("Caregiver shift updated:", onShift);
   } catch (error) {
-    console.error("Could not update caretaker shift status:", error);
+    console.error("Could not update Caregiver shift status:", error);
   }
 }
 
-export function listenCaretakers(cb: (caretakers: any[]) => void) {
-  const q = query(collection(db, "caretakers"));
+export function listenCaregivers(cb: (Caregivers: any[]) => void) {
+  const q = query(collection(db, "Caregivers"));
   return onSnapshot(q, (snap) => {
     const items = snap.docs.map((d) => ({
       id: d.id,
@@ -164,21 +164,21 @@ export function listenCaretakers(cb: (caretakers: any[]) => void) {
   });
 }
 
-export function listenCaretakerShift(
-  caretakerId: string,
+export function listenCaregiverShift(
+  CaregiverId: string,
   cb: (onShift: boolean) => void
 ) {
-  const caretakerRef = doc(db, "caretakers", caretakerId);
-  return onSnapshot(caretakerRef, (snap) => {
+  const CaregiverRef = doc(db, "Caregivers", CaregiverId);
+  return onSnapshot(CaregiverRef, (snap) => {
     const onShift = snap.data()?.onShift ?? false;
     cb(onShift);
   });
 }
 
-export async function checkAnyCaretakerOnShift(): Promise<boolean> {
+export async function checkAnyCaregiverOnShift(): Promise<boolean> {
   try {
-    const caretakersSnap = await getDocs(collection(db, "caretakers"));
-    return caretakersSnap.docs.some((doc) => doc.data().onShift === true);
+    const CaregiversSnap = await getDocs(collection(db, "Caregivers"));
+    return CaregiversSnap.docs.some((doc) => doc.data().onShift === true);
   } catch (error) {
     return false;
   }
