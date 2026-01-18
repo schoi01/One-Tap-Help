@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase/firestore";
 import { Urgency } from "../types/request";
@@ -36,6 +37,20 @@ export async function createRequest(params: {
   urgency: Urgency;
   createdBy: string;
 }) {
+  // Check if there's already an active request of this type (pending or accepted)
+  const existingQuery = query(
+    requestsCol,
+    where("title", "==", params.title),
+    where("status", "in", ["pending", "accepted"])
+  );
+  
+  const existingRequests = await getDocs(existingQuery);
+  
+  if (existingRequests.docs.length > 0) {
+    console.log(`A ${params.title} request is already active. Only one request per type allowed.`);
+    return;
+  }
+
   await addDoc(requestsCol, {
     title: params.title,
     urgency: params.urgency,
