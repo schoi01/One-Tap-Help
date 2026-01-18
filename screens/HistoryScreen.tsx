@@ -98,7 +98,7 @@ export default function HistoryScreen({ onBack }: { onBack?: () => void }) {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F3F1EC",
   },
   header: {
     paddingHorizontal: 16,

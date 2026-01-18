@@ -132,7 +132,7 @@ export default function GuardianScreen({ onViewHistory }: { onViewHistory?: () =
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F3F1EC",
   },
   header: {
     paddingHorizontal: 16,
