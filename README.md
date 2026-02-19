@@ -1,9 +1,8 @@
 ## One-Tap Help
-![IMG_2022](https://github.com/user-attachments/assets/9211fa32-5ae2-410e-b8e1-d400a3620497)
 [Caregiver & Guardian View]
-![IMG_4162](https://github.com/user-attachments/assets/79a69a49-fd71-4a81-82e7-09a1b3ef487b)
+![IMG_2022](https://github.com/user-attachments/assets/9211fa32-5ae2-410e-b8e1-d400a3620497)
 [Patient View]
-
+![IMG_4162](https://github.com/user-attachments/assets/79a69a49-fd71-4a81-82e7-09a1b3ef487b)
 
 ## Inspiration
 - We noticed a critical gap in care communication: **friction**. Whether in a home care setting or a hospital, the process of asking for help is often too manual, and the status of that request is opaque. Guardians are anxious, patients feel unheard, and caregivers are overwhelmed. We wanted to strip away the complexity and create a system where help is literally one tap away, and everyone—from the family member at work to the nurse in the hall—is perfectly synced.
